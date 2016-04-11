@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Frank Chen&#39;s Blog</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://zqchen90.github.io/"/>
+  <updated>2016-04-07T06:48:20.000Z</updated>
+  <id>http://zqchen90.github.io/</id>
+  
+  <author>
+    <name>zqchen</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>React 实现添加千分位的 Input</title>
+    <link href="http://zqchen90.github.io/2016/04/06/react-money-input/"/>
+    <id>http://zqchen90.github.io/2016/04/06/react-money-input/</id>
+    <published>2016-04-06T02:51:34.000Z</published>
+    <updated>2016-04-07T06:48:20.000Z</updated>
+    
+    <content type="html">&lt;p&gt;有这样一个需求，用户在 input 中输入金额，为了展示效果，需要：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用户输入时，自动添加千分位&lt;/li&gt;
+&lt;li&gt;输入结束，提交时仍提交数字（不包含千分位）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;因为最近正在学习 React.js，就试着练练手，用 React 实现满足上述需求的 input 组件。&lt;/p&gt;
+&lt;h2 id=&quot;千分位&quot;&gt;&lt;a href=&quot;# 千分位&quot; class=&quot;headerlink&quot; title=&quot;千分位&quot;&gt;&lt;/a&gt;千分位 &lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;http://zh.wikipedia.org/zh/%E5%B0%8F%E6%95%B8%E9%BB%9E#.E6.95.B0-.7B.E5.AD.97.7D-.E5.88.86.E4.BD.8D.E7.AC.A6.E5.8F.B7&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt; 维基百科 &lt;/a&gt; 对千分位有清楚的说明，这里只举一个例子。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;123456.9876&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;的千分位是&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;123,456.987,6&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;另外千分位可以用逗号，也可以用空格。这里就不做区分，都只用逗号表示。&lt;/p&gt;
+&lt;p&gt;对数字添加千分位的 js 实现也有 &lt;a href=&quot;http://heeroluo.net/article/detail/115&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt; 很多&lt;/a&gt;，这里就选最简单的一种。&lt;/p&gt;
+&lt;h3 id=&quot;添加千分位：&quot;&gt;&lt;a href=&quot;# 添加千分位：&quot; class=&quot;headerlink&quot; title=&quot;添加千分位：&quot;&gt;&lt;/a&gt;添加千分位：&lt;/h3&gt;&lt;figure class=&quot;highlight javascript&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; amount = &lt;span class=&quot;string&quot;&gt;&#39;123456.9876&#39;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; amountThusandth = amount.replace(&lt;span class=&quot;regexp&quot;&gt;/(\d)(?=(\d&amp;#123;3&amp;#125;)+(?:\.\d+)?$)/g&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&quot;$1,&quot;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;去除千分位：&quot;&gt;&lt;a href=&quot;# 去除千分位：&quot; class=&quot;headerlink&quot; title=&quot;去除千分位：&quot;&gt;&lt;/a&gt;去除千分位：&lt;/h3&gt;&lt;figure class=&quot;highlight javascript&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; amountThusandth = &lt;span class=&quot;string&quot;&gt;&#39;123,456.987,6&#39;&lt;/span&gt;;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;var&lt;/span&gt; amount = amountThusandth.replace(&lt;span class=&quot;regexp&quot;&gt;/,/g&lt;/span&gt;, &lt;span class=&quot;string&quot;&gt;&#39;&#39;&lt;/span&gt;);&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;不过需要提醒一下，&lt;strong&gt;不要使用 toLocaleString()&lt;/strong&gt;，toLocaleString 函数无法对小数部分添加千分位，并且在不同浏览器的效果不同。&lt;/p&gt;
+&lt;h2 id=&quot;实现&quot;&gt;&lt;a href=&quot;# 实现&quot; class=&quot;headerlink&quot; title=&quot;实现&quot;&gt;&lt;/a&gt;实现&lt;/h2&gt;&lt;p&gt;React.js 对我来说，是一种全新的思考套路，如果不熟悉 React 的话，非常建议先阅读下面这两篇文章：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&quot;https://segmentfault.com/a/1190000003501752#articleHeader5&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;React.js 的介绍 - 针对了解 jQuery 的工程师&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://facebook.github.io/react/docs/thinking-in-react.zh-CN.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;React 编程思想&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;对输入的数字添加千分位这个问题，实际上是一个很典型的问题：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用一个 state 来保存添加千分位的结果&lt;/li&gt;
+&lt;li&gt;input 的 value 由 state 设置&lt;/li&gt;
+&lt;li&gt;在 input 的 onChange 中，处理用户输入的值，并通过 this.setState 更新&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;Demo&quot;&gt;&lt;a href=&quot;#Demo&quot; class=&quot;headerlink&quot; title=&quot;Demo&quot;&gt;&lt;/a&gt;Demo&lt;/h2&gt;&lt;iframe scrolling=&quot;no&quot; width=&quot;100%&quot; height=&quot;300&quot; src=&quot;http://jsfiddle.net/hqaz7kgh/embedded/js,resources,html,css,result/light&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;
+&lt;h3 id=&quot;参考&quot;&gt;&lt;a href=&quot;# 参考&quot; class=&quot;headerlink&quot; title=&quot;参考&quot;&gt;&lt;/a&gt;参考 &lt;/h3&gt;&lt;p&gt;&lt;a href=&quot;http://zh.wikipedia.org/zh/%E5%B0%8F%E6%95%B8%E9%BB%9E#.E6.95.B0-.7B.E5.AD.97.7D-.E5.88.86.E4.BD.8D.E7.AC.A6.E5.8F.B7&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt; 小數點 - 维基百科 &lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://heeroluo.net/article/detail/115&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt; 从千分位格式化谈 JS 性能优化&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;https://segmentfault.com/a/1190000003501752#articleHeader5&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;React.js 的介绍 - 针对了解 jQuery 的工程师&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://facebook.github.io/react/docs/thinking-in-react.zh-CN.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;React 编程思想&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;有这样一个需求，用户在 input 中输入金额，为了展示效果，需要：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用户输入时，自动添加千分位&lt;/li&gt;
+&lt;li&gt;输入结束，提交时仍提交数字（不包含千分位）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;因为最近正在学习 React.js，就试着练练手，用 Rea
+    
+    </summary>
+    
+      <category term="React" scheme="http://zqchen90.github.io/categories/React/"/>
+    
+    
+      <category term="React" scheme="http://zqchen90.github.io/tags/React/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Python 使用 ElementTree 处理 XML</title>
+    <link href="http://zqchen90.github.io/2016/04/05/python-element-tree/"/>
+    <id>http://zqchen90.github.io/2016/04/05/python-element-tree/</id>
+    <published>2016-04-05T11:19:53.000Z</published>
+    <updated>2016-04-07T06:15:43.000Z</updated>
+    
+    <content type="html">&lt;p&gt;&lt;strong&gt;ElementTree&lt;/strong&gt;是 Python 常用的处理 XML 文件的类。本文将介绍使用 ElementTree 解析、查找、修改 XML 的方法。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&quot;一、引用方法&quot;&gt;&lt;a href=&quot;# 一、引用方法&quot; class=&quot;headerlink&quot; title=&quot;一、引用方法&quot;&gt;&lt;/a&gt;一、引用方法&lt;/h2&gt;&lt;p&gt;ElementTree 所在文件保存在 Lib/xml/etree/ElementTree.py，所以我们通过下面的代码引用它，之后就可以使用 ET. 来访问 ElementTree 中的函数。&lt;br&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; xml.etree.ElementTree &lt;span class=&quot;keyword&quot;&gt;as&lt;/span&gt; ET&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;h2 id=&quot;二、一个 XML 例子&quot;&gt;&lt;a href=&quot;# 二、一个 XML 例子&quot; class=&quot;headerlink&quot; title=&quot;二、一个 XML 例子&quot;&gt;&lt;/a&gt;二、一个 XML 例子 &lt;/h2&gt;&lt;p&gt; 下面所有的操作都将下面这段 XML 为例，我们将它保存为&lt;strong&gt;sample.xml&lt;/strong&gt;。&lt;br&gt;&lt;figure class=&quot;highlight xml&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;lt;?xml version=&quot;1.0&quot;?&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;data&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;country&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;name&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;Liechtenstein&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;rank&lt;/span&gt;&amp;gt;&lt;/span&gt;1&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;rank&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;year&lt;/span&gt;&amp;gt;&lt;/span&gt;2008&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;year&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;gdppc&lt;/span&gt;&amp;gt;&lt;/span&gt;141100&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;gdppc&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;neighbor&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;name&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;Austria&quot;&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;direction&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;E&quot;&lt;/span&gt;/&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;neighbor&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;name&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;Switzerland&quot;&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;direction&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;W&quot;&lt;/span&gt;/&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;country&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;country&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;name&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;Singapore&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;rank&lt;/span&gt;&amp;gt;&lt;/span&gt;4&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;rank&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;year&lt;/span&gt;&amp;gt;&lt;/span&gt;2011&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;year&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;gdppc&lt;/span&gt;&amp;gt;&lt;/span&gt;59900&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;gdppc&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;neighbor&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;name&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;Malaysia&quot;&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;direction&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;N&quot;&lt;/span&gt;/&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;country&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;country&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;name&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;Panama&quot;&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;rank&lt;/span&gt;&amp;gt;&lt;/span&gt;68&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;rank&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;year&lt;/span&gt;&amp;gt;&lt;/span&gt;2011&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;year&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;gdppc&lt;/span&gt;&amp;gt;&lt;/span&gt;13600&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;gdppc&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;neighbor&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;name&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;Costa Rica&quot;&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;direction&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;W&quot;&lt;/span&gt;/&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;tag&quot;&gt;&amp;lt;&lt;span class=&quot;name&quot;&gt;neighbor&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;name&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;Colombia&quot;&lt;/span&gt; &lt;span class=&quot;attr&quot;&gt;direction&lt;/span&gt;=&lt;span class=&quot;string&quot;&gt;&quot;E&quot;&lt;/span&gt;/&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;country&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;tag&quot;&gt;&amp;lt;/&lt;span class=&quot;name&quot;&gt;data&lt;/span&gt;&amp;gt;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;先对 XML 的格式做一些说明：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Tag&lt;/strong&gt;： 使用 &amp;lt; 和 &amp;gt; 包围的部分，如 &lt;rank&gt; 成为 start-tag，&lt;/rank&gt;是 end-tags；&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Element&lt;/strong&gt;：被 Tag 包围的部分，如&lt;rank&gt;68&lt;/rank&gt;，可以认为是一个节点，它可以有子节点；&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Attribute&lt;/strong&gt;：在 Tag 中可能存在的 name/value 对，如 &lt;country name=&quot;Liechtenstein&quot;&gt; 中的 name=”Liechtenstein”，一般表示属性。&lt;/country&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;三、解析 XML&quot;&gt;&lt;a href=&quot;# 三、解析 XML&quot; class=&quot;headerlink&quot; title=&quot;三、解析 XML&quot;&gt;&lt;/a&gt;三、解析 XML&lt;/h2&gt;&lt;h3 id=&quot;读入 XML 数据&quot;&gt;&lt;a href=&quot;# 读入 XML 数据&quot; class=&quot;headerlink&quot; title=&quot;读入 XML 数据&quot;&gt;&lt;/a&gt;读入 XML 数据 &lt;/h3&gt;&lt;p&gt; 首先读入 XML，有两种途径，从文件读入和从字符串读入。&lt;br&gt;从文件读入：&lt;br&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; xml.etree.ElementTree &lt;span class=&quot;keyword&quot;&gt;as&lt;/span&gt; ET&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;tree = ET.parse(&lt;span class=&quot;string&quot;&gt;&#39;sample.xml&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;root = tree.getroot()&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;从字符串读入：&lt;br&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;root = ET.fromstring(sample_as_string)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;tree 和 root 分布是 ElementTree 中两个很重要的类的对象：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;ElementTree&lt;/li&gt;
+&lt;li&gt;Element&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;查看 Tag 和 Attribute&quot;&gt;&lt;a href=&quot;# 查看 Tag 和 Attribute&quot; class=&quot;headerlink&quot; title=&quot;查看 Tag 和 Attribute&quot;&gt;&lt;/a&gt;查看 Tag 和 Attribute&lt;/h3&gt;&lt;p&gt;这时得到的 root 是一个指向&lt;data&gt;Element 对象，我们可以通过查看 root 的 tag 和 attrib 来验证这一点：&lt;br&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;root.tag&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&#39;data&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;root.attrib&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#123;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/data&gt;&lt;/p&gt;
+&lt;p&gt;上面的代码说明了查看一个 Element 的 Tag 和 Attribute 的方法，Tag 是一个 &lt;em&gt; 字符串 &lt;/em&gt;，而 Attribute 得到的是一个&lt;em&gt; 字典&lt;/em&gt;。&lt;/p&gt;
+&lt;p&gt;另外，还可以使用&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Element.get(AttributeName)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;来代替 Element.attrib[AttributeName]来访问。&lt;/p&gt;
+&lt;h3 id=&quot;查看孩子&quot;&gt;&lt;a href=&quot;# 查看孩子&quot; class=&quot;headerlink&quot; title=&quot;查看孩子&quot;&gt;&lt;/a&gt;查看孩子&lt;/h3&gt;&lt;p&gt;root.attrib 返回的是一个空字典，如果看 root 的孩子，可以得到非空的 attrib 字典。&lt;/p&gt;
+&lt;h4 id=&quot;1、使用 for…in…访问&quot;&gt;&lt;a href=&quot;#1、使用 for…in…访问&quot; class=&quot;headerlink&quot; title=&quot;1、使用 for…in…访问&quot;&gt;&lt;/a&gt;1、使用 for…in…访问&lt;/h4&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; child &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; root:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;print&lt;/span&gt; child.tag, child.attrib&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;得到&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;country {‘name’: ‘Liechtenstein’}&lt;br&gt;country {‘name’: ‘Singapore’}&lt;br&gt;country {‘name’: ‘Panama’}&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;2、使用下标访问&quot;&gt;&lt;a href=&quot;#2、使用下标访问&quot; class=&quot;headerlink&quot; title=&quot;2、使用下标访问&quot;&gt;&lt;/a&gt;2、使用下标访问 &lt;/h4&gt;&lt;p&gt; 如:&lt;br&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class=&quot;keyword&quot;&gt;print&lt;/span&gt; root[&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;].tag&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;country&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;&amp;gt;&amp;gt;&amp;gt; &lt;/span&gt;&lt;span class=&quot;keyword&quot;&gt;print&lt;/span&gt; root[&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;][&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;].tag&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;rank&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;h4 id=&quot;3、使用 Tag 名称访问&quot;&gt;&lt;a href=&quot;#3、使用 Tag 名称访问&quot; class=&quot;headerlink&quot; title=&quot;3、使用 Tag 名称访问&quot;&gt;&lt;/a&gt;3、使用 Tag 名称访问 &lt;/h4&gt;&lt;p&gt; 下标访问的方法虽然简单，但是在未知 XML 具体结构的时候并不适用，通过 Tag 名称访问的方法更具有普适性。这里用到 Element 类的几个函数，分别是&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Element.iter()&lt;/li&gt;
+&lt;li&gt;Element.findall()&lt;/li&gt;
+&lt;li&gt;Element.find()&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这两个函数使用的场景有所差异：&lt;br&gt;&lt;strong&gt;Element.iter()&lt;/strong&gt;用来寻找 &lt;strong&gt; 所有 &lt;/strong&gt; 符合要求的 Tag，注意，这里查找的范围 &lt;strong&gt; 是所有孩子和孩子的孩子 and so on&lt;/strong&gt;。如果查看所有的 year，可以使用下面的代码：&lt;br&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; neighbor &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; root.iter(&lt;span class=&quot;string&quot;&gt;&#39;year&#39;&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;print&lt;/span&gt; neighbor.text&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;返回&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;2008&lt;br&gt;2011&lt;br&gt;2011&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Element.findall()&lt;/strong&gt;只查找 &lt;strong&gt; 直接的孩子 &lt;/strong&gt;，返回所有符合要求的 Tag 的 Element，而&lt;strong&gt;Element.find()&lt;/strong&gt; 只返回符合要求的第一个 Element。如果查看 Singapore 的 year 的值，可以使用下面的代码：&lt;br&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; country &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; root.findall(&lt;span class=&quot;string&quot;&gt;&#39;country&#39;&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; country.attrib[&lt;span class=&quot;string&quot;&gt;&#39;name&#39;&lt;/span&gt;] == &lt;span class=&quot;string&quot;&gt;&#39;Singapore&#39;&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            year = country.find(&lt;span class=&quot;string&quot;&gt;&#39;year&#39;&lt;/span&gt;)  &lt;span class=&quot;comment&quot;&gt;# 使用 Element.find()&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;print&lt;/span&gt; year.text&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; country &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; root.findall(&lt;span class=&quot;string&quot;&gt;&#39;country&#39;&lt;/span&gt;):&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; country.attrib[&lt;span class=&quot;string&quot;&gt;&#39;name&#39;&lt;/span&gt;] == &lt;span class=&quot;string&quot;&gt;&#39;Singapore&#39;&lt;/span&gt;:&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            years = country.findall(&lt;span class=&quot;string&quot;&gt;&#39;year&#39;&lt;/span&gt;)  &lt;span class=&quot;comment&quot;&gt;# 使用 Element.findall()&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;print&lt;/span&gt; years[&lt;span class=&quot;number&quot;&gt;0&lt;/span&gt;].text  &lt;span class=&quot;comment&quot;&gt;# 注意和上段的区别&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;查看 Element 的值&quot;&gt;&lt;a href=&quot;# 查看 Element 的值&quot; class=&quot;headerlink&quot; title=&quot;查看 Element 的值&quot;&gt;&lt;/a&gt;查看 Element 的值 &lt;/h3&gt;&lt;p&gt; 我们可以直接用 Element.text 来得到这个 Element 的值。&lt;/p&gt;
+&lt;h2 id=&quot;四、修改 XML&quot;&gt;&lt;a href=&quot;# 四、修改 XML&quot; class=&quot;headerlink&quot; title=&quot;四、修改 XML&quot;&gt;&lt;/a&gt;四、修改 XML&lt;/h2&gt;&lt;p&gt;前面已经介绍了如何获取一个 Element 的对象，以及查看它的 Tag、Attribute、值和它的孩子。下面介绍如何修改一个 Element 并对 XML 文件进行保存&lt;/p&gt;
+&lt;h3 id=&quot;修改 Element&quot;&gt;&lt;a href=&quot;# 修改 Element&quot; class=&quot;headerlink&quot; title=&quot;修改 Element&quot;&gt;&lt;/a&gt;修改 Element&lt;/h3&gt;&lt;p&gt;修改 Element 可以直接访问 Element.text。&lt;br&gt;修改 Element 的 Attribute，也可以用来新增 Attribute：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Element.set(‘AttributeName’,’AttributeValue’)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;新增孩子节点：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Element.append(childElement)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;删除孩子节点：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Element.remove(childElement)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&quot;保存 XML&quot;&gt;&lt;a href=&quot;# 保存 XML&quot; class=&quot;headerlink&quot; title=&quot;保存 XML&quot;&gt;&lt;/a&gt;保存 XML&lt;/h3&gt;&lt;p&gt;我们从文件解析的时候，我们用了一个 ElementTree 的对象 tree，在完成修改之后，还用 tree 来保存 XML 文件。&lt;br&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;tree.write(&lt;span class=&quot;string&quot;&gt;&#39;output.xml&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;h3 id=&quot;构建 XML&quot;&gt;&lt;a href=&quot;# 构建 XML&quot; class=&quot;headerlink&quot; title=&quot;构建 XML&quot;&gt;&lt;/a&gt;构建 XML&lt;/h3&gt;&lt;p&gt;ElementTree 提供了两个静态函数（直接用类名访问，这里我们用的是 ET）可以很方便的构建一个 XML，如：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;root = ET.Element(&lt;span class=&quot;string&quot;&gt;&#39;data&#39;&lt;/span&gt;) &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    country = ET.SubElement(root,&lt;span class=&quot;string&quot;&gt;&#39;country&#39;&lt;/span&gt;, &amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;name&#39;&lt;/span&gt;:&lt;span class=&quot;string&quot;&gt;&#39;Liechtenstein&#39;&lt;/span&gt;&amp;#125;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    rank = ET.SubElement(country,&lt;span class=&quot;string&quot;&gt;&#39;rank&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    rank.text = &lt;span class=&quot;string&quot;&gt;&#39;1&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    year = ET.SubElement(country,&lt;span class=&quot;string&quot;&gt;&#39;year&#39;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    year.text = &lt;span class=&quot;string&quot;&gt;&#39;2008&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    ET.dump(root)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;就可以得到&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;data&gt;&lt;country name=&quot;Liechtenstein&quot;&gt;&lt;rank&gt;1&lt;/rank&gt;&lt;year&gt;2008&lt;/year&gt;&lt;/country&gt;&lt;/data&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;五、XPath 支持&quot;&gt;&lt;a href=&quot;# 五、XPath 支持&quot; class=&quot;headerlink&quot; title=&quot;五、XPath 支持&quot;&gt;&lt;/a&gt;五、XPath 支持&lt;/h2&gt;&lt;p&gt;XPath 表达式用来在 XML 中定位 Element，下面给一个例子来说明：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; xml.etree.ElementTree &lt;span class=&quot;keyword&quot;&gt;as&lt;/span&gt; ET&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;root = ET.fromstring(countrydata)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# Top-level elements&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;root.findall(&lt;span class=&quot;string&quot;&gt;&quot;.&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# All &#39;neighbor&#39; grand-children of &#39;country&#39; children of the top-level&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# elements&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;root.findall(&lt;span class=&quot;string&quot;&gt;&quot;./country/neighbor&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# Nodes with name=&#39;Singapore&#39; that have a &#39;year&#39; child&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;root.findall(&lt;span class=&quot;string&quot;&gt;&quot;.//year/..[@name=&#39;Singapore&#39;]&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# &#39;year&#39; nodes that are children of nodes with name=&#39;Singapore&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;root.findall(&lt;span class=&quot;string&quot;&gt;&quot;.//*[@name=&#39;Singapore&#39;]/year&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;# All &#39;neighbor&#39; nodes that are the second child of their parent&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;root.findall(&lt;span class=&quot;string&quot;&gt;&quot;.//neighbor[2]&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h3 id=&quot;参考&quot;&gt;&lt;a href=&quot;# 参考&quot; class=&quot;headerlink&quot; title=&quot;参考&quot;&gt;&lt;/a&gt;参考&lt;/h3&gt;&lt;p&gt;&lt;a href=&quot;http://effbot.org/zone/element-index.htm&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;ElementTree 主页&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;https://docs.python.org/2/library/xml.etree.elementtree.html#reference&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;ElementTree 的函数与类介绍&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;2014/5/30&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;strong&gt;ElementTree&lt;/strong&gt;是 Python 常用的处理 XML 文件的类。本文将介绍使用 ElementTree 解析、查找、修改 XML 的方法。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&quot;一、引用方法&quot;&gt;&lt;a href=&quot;# 一、引用方法&quot; cla
+    
+    </summary>
+    
+      <category term="Python" scheme="http://zqchen90.github.io/categories/Python/"/>
+    
+    
+      <category term="Python" scheme="http://zqchen90.github.io/tags/Python/"/>
+    
+      <category term="XML" scheme="http://zqchen90.github.io/tags/XML/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="http://zqchen90.github.io/2016/04/05/hello-world/"/>
+    <id>http://zqchen90.github.io/2016/04/05/hello-world/</id>
+    <published>2016-04-05T07:40:45.000Z</published>
+    <updated>2016-04-05T09:57:47.000Z</updated>
+    
+    <content type="html">&lt;p&gt;Welcome to my blog! This is your my first post and Hello world!&lt;/p&gt;
+&lt;p&gt;If you want to know more about me, please refer to &lt;a href=&quot;/about/&quot;&gt;About Me&lt;/a&gt;.&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Welcome to my blog! This is your my first post and Hello world!&lt;/p&gt;
+&lt;p&gt;If you want to know more about me, please refer to &lt;a href=&quot;/about
+    
+    </summary>
+    
+    
+  </entry>
+  
+</feed>
