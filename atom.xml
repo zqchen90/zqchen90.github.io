@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>Frank Chen&#39;s Blog</title>
-  
+  <subtitle>读万卷书 行万里路</subtitle>
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://zqchen90.github.io/"/>
-  <updated>2016-04-07T06:48:20.000Z</updated>
+  <updated>2016-04-13T02:39:36.000Z</updated>
   <id>http://zqchen90.github.io/</id>
   
   <author>
@@ -14,6 +14,48 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>像 Git 一样思考（译）</title>
+    <link href="http://zqchen90.github.io/2016/04/08/think-like-a-git/"/>
+    <id>http://zqchen90.github.io/2016/04/08/think-like-a-git/</id>
+    <published>2016-04-08T11:19:53.000Z</published>
+    <updated>2016-04-13T02:39:36.000Z</updated>
+    
+    <content type="html">&lt;p&gt;本文翻译自 Sam Livingston-Gray 的文章&lt;a href=&quot;http://think-like-a-git.net/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Think Like (a) Git&lt;/a&gt;。我在学习 Git 的过程中无意看到了这篇文章，Sam 从图论的角度解释了 Git，让我明白了很多之前疑惑的地方。所以，我将这篇文章翻译成中文，希望能帮助更多学习 Git 的人。&lt;/p&gt;
+&lt;h2 id=&quot;图论（Graph-Theory）&quot;&gt;&lt;a href=&quot;# 图论（Graph-Theory）&quot; class=&quot;headerlink&quot; title=&quot;图论（Graph Theory）&quot;&gt;&lt;/a&gt;图论（Graph Theory）&lt;/h2&gt;&lt;h3 id=&quot;Seven-Bridges-of-Konigsberg&quot;&gt;&lt;a href=&quot;#Seven-Bridges-of-Konigsberg&quot; class=&quot;headerlink&quot; title=&quot;Seven Bridges of Königsberg&quot;&gt;&lt;/a&gt;Seven Bridges of Königsberg&lt;/h3&gt;&lt;h3 id=&quot;Places-To-Go-and-Ways-to-Get-There&quot;&gt;&lt;a href=&quot;#Places-To-Go-and-Ways-to-Get-There&quot; class=&quot;headerlink&quot; title=&quot;Places To Go, and Ways to Get There&quot;&gt;&lt;/a&gt;Places To Go, and Ways to Get There&lt;/h3&gt;&lt;h3 id=&quot;Nodes-and-Edges&quot;&gt;&lt;a href=&quot;#Nodes-and-Edges&quot; class=&quot;headerlink&quot; title=&quot;Nodes and Edges&quot;&gt;&lt;/a&gt;Nodes and Edges&lt;/h3&gt;&lt;h3 id=&quot;Attaching-Labels-to-Nodes&quot;&gt;&lt;a href=&quot;#Attaching-Labels-to-Nodes&quot; class=&quot;headerlink&quot; title=&quot;Attaching Labels to Nodes&quot;&gt;&lt;/a&gt;Attaching Labels to Nodes&lt;/h3&gt;&lt;h3 id=&quot;Attaching-Labels-to-Edges&quot;&gt;&lt;a href=&quot;#Attaching-Labels-to-Edges&quot; class=&quot;headerlink&quot; title=&quot;Attaching Labels to Edges&quot;&gt;&lt;/a&gt;Attaching Labels to Edges&lt;/h3&gt;&lt;h3 id=&quot;Directed-Versus-Undirected-Graphs&quot;&gt;&lt;a href=&quot;#Directed-Versus-Undirected-Graphs&quot; class=&quot;headerlink&quot; title=&quot;Directed Versus Undirected Graphs&quot;&gt;&lt;/a&gt;Directed Versus Undirected Graphs&lt;/h3&gt;&lt;h3 id=&quot;Reachability&quot;&gt;&lt;a href=&quot;#Reachability&quot; class=&quot;headerlink&quot; title=&quot;Reachability&quot;&gt;&lt;/a&gt;Reachability&lt;/h3&gt;&lt;h2 id=&quot;图和 Git（Graphs-and-Git）&quot;&gt;&lt;a href=&quot;# 图和 Git（Graphs-and-Git）&quot; class=&quot;headerlink&quot; title=&quot;图和 Git（Graphs and Git）&quot;&gt;&lt;/a&gt;图和 Git（Graphs and Git）&lt;/h2&gt;&lt;p&gt;我讨论了这么多关于图论内容的原因是 Git 就是一个巨大的图。&lt;/p&gt;
+&lt;img src=&quot;/2016/04/08/think-like-a-git/graphs-and-git.png&quot; alt=&quot;graphs-and-git.png&quot; title=&quot;&quot;&gt;
+&lt;p&gt;&lt;strong&gt;Git commits（简单的视角）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;大部分时候，你使用 Git 都是通过这样那样的方式进行提交（commits），从表面上看，一次 Git 提交包括两部分：（1）在某个时刻，一个指向你的代码状态的指针（pointer）；（2）0 个或者多个指向父级提交的指针。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;(提示：指针的含义和讨论图的时候一样)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;一次 Git 的 commit 就是图里的一个节点&lt;/strong&gt;，节点可以指向其他更早的节点。&lt;/p&gt;
+&lt;p&gt;另外：如果你希望比一个理智的人类知道的更多，我非常推荐 Scott Chacon 的&lt;a href=&quot;http://peepcode.com/products/git-internals-pdf&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;PDF&lt;/a&gt;。或者是任何 Scott Chacon 的讲座。Scott 关于 Git 的知识实在是……惊人。&lt;/p&gt;
+&lt;h3 id=&quot;可视化你的 Git 仓库（Visualizing-Your-Git-Repository）&quot;&gt;&lt;a href=&quot;# 可视化你的 Git 仓库（Visualizing-Your-Git-Repository）&quot; class=&quot;headerlink&quot; title=&quot;可视化你的 Git 仓库（Visualizing Your Git Repository）&quot;&gt;&lt;/a&gt;可视化你的 Git 仓库（Visualizing Your Git Repository）&lt;/h3&gt;&lt;p&gt;我的大约一半的 Git 操作都是在命令行下进行的。&lt;strong&gt;但是如果我想知道正在发生什么&lt;/strong&gt;，我会使用 Git 的可视化工具。在 Mac 上，我能找到的最好的可视化工具是&lt;a href=&quot;http://gitx.frim.nl/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;GitX&lt;/a&gt;。其他操作系统上，可以使用&lt;strong&gt;gitk&lt;/strong&gt;，或者你可以在网上找到适合你的工具。&lt;/p&gt;
+&lt;p&gt;可视化工具可以帮你 &lt;strong&gt; 了解分支的历史 &lt;/strong&gt;，比如说，你可以输入命令&lt;code&gt;git log --oneline--abbrev-commit --branches=*&lt;/code&gt; 来列出仓库中所有的 commits 的扁平化视图。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;（感谢 &lt;a href=&quot;https://twitter.com/#!/cflipse&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;@cflipse&lt;/a&gt; 指出 &lt;code&gt;--pretty=online&lt;/code&gt; 可以缩写为&lt;code&gt;--online&lt;/code&gt;）&lt;/em&gt;&lt;/p&gt;
+&lt;img src=&quot;/2016/04/08/think-like-a-git/textual-git-log.png&quot; alt=&quot;textual-git-log.png&quot; title=&quot;&quot;&gt;
+&lt;p&gt;或者，你可以在上面的命令里加上&lt;code&gt;--graph&lt;/code&gt;，会得到一个稍微更有用的视图。&lt;/p&gt;
+&lt;figure class=&quot;highlight brainfuck&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;comment&quot;&gt;git&lt;/span&gt; &lt;span class=&quot;comment&quot;&gt;log&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;oneline&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;abbrev&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;commit&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;branches=*&lt;/span&gt; &lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;literal&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;comment&quot;&gt;graph&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;img src=&quot;/2016/04/08/think-like-a-git/textual-git-graph.png&quot; alt=&quot;textual-git-graph.png&quot; title=&quot;&quot;&gt;
+&lt;p&gt;好多了！&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;（感谢 &lt;a href=&quot;https://twitter.com/#!/mjdominus&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;@mjdominus&lt;/a&gt; 和 &lt;a href=&quot;https://twitter.com/#!/JRGarcia&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;@JRGarcia&lt;/a&gt;提醒我可以使用&lt;code&gt;--graph&lt;/code&gt;）&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&quot;引用（References）&quot;&gt;&lt;a href=&quot;# 引用（References）&quot; class=&quot;headerlink&quot; title=&quot;引用（References）&quot;&gt;&lt;/a&gt;引用（References）&lt;/h3&gt;&lt;h3 id=&quot;The-Reference-Reference&quot;&gt;&lt;a href=&quot;#The-Reference-Reference&quot; class=&quot;headerlink&quot; title=&quot;The Reference Reference&quot;&gt;&lt;/a&gt;The Reference Reference&lt;/h3&gt;&lt;h3 id=&quot;Making-Sense-of-the-Display&quot;&gt;&lt;a href=&quot;#Making-Sense-of-the-Display&quot; class=&quot;headerlink&quot; title=&quot;Making Sense of the Display&quot;&gt;&lt;/a&gt;Making Sense of the Display&lt;/h3&gt;&lt;img src=&quot;/2016/04/08/think-like-a-git/gitx-visualization-annotated.png&quot; alt=&quot;gitx-visualization-annotated.png&quot; title=&quot;&quot;&gt;
+&lt;h3 id=&quot;Garbage-Collection&quot;&gt;&lt;a href=&quot;#Garbage-Collection&quot; class=&quot;headerlink&quot; title=&quot;Garbage Collection&quot;&gt;&lt;/a&gt;Garbage Collection&lt;/h3&gt;&lt;h2 id=&quot;试试 Git（Experimenting-With-Git）&quot;&gt;&lt;a href=&quot;# 试试 Git（Experimenting-With-Git）&quot; class=&quot;headerlink&quot; title=&quot;试试 Git（Experimenting With Git）&quot;&gt;&lt;/a&gt;试试 Git（Experimenting With Git）&lt;/h2&gt;&lt;h3 id=&quot;References-Make-Commits-Reachable&quot;&gt;&lt;a href=&quot;#References-Make-Commits-Reachable&quot; class=&quot;headerlink&quot; title=&quot;References Make Commits Reachable&quot;&gt;&lt;/a&gt;References Make Commits Reachable&lt;/h3&gt;&lt;h3 id=&quot;My-Humble-Beginnings&quot;&gt;&lt;a href=&quot;#My-Humble-Beginnings&quot; class=&quot;headerlink&quot; title=&quot;My Humble Beginnings&quot;&gt;&lt;/a&gt;My Humble Beginnings&lt;/h3&gt;&lt;h3 id=&quot;Branches-as-Savepoints&quot;&gt;&lt;a href=&quot;#Branches-as-Savepoints&quot; class=&quot;headerlink&quot; title=&quot;Branches as Savepoints&quot;&gt;&lt;/a&gt;Branches as Savepoints&lt;/h3&gt;&lt;h3 id=&quot;Use-Your-Targeting-Computer-Luke&quot;&gt;&lt;a href=&quot;#Use-Your-Targeting-Computer-Luke&quot; class=&quot;headerlink&quot; title=&quot;Use Your Targeting Computer, Luke&quot;&gt;&lt;/a&gt;Use Your Targeting Computer, Luke&lt;/h3&gt;&lt;h2 id=&quot;测试一下合并（Testing-Out-Merges）&quot;&gt;&lt;a href=&quot;# 测试一下合并（Testing-Out-Merges）&quot; class=&quot;headerlink&quot; title=&quot;测试一下合并（Testing Out Merges）&quot;&gt;&lt;/a&gt;测试一下合并（Testing Out Merges）&lt;/h2&gt;&lt;h3 id=&quot;The-Scout-Pattern&quot;&gt;&lt;a href=&quot;#The-Scout-Pattern&quot; class=&quot;headerlink&quot; title=&quot;The Scout Pattern&quot;&gt;&lt;/a&gt;The Scout Pattern&lt;/h3&gt;&lt;h3 id=&quot;The-Savepoint-Pattern&quot;&gt;&lt;a href=&quot;#The-Savepoint-Pattern&quot; class=&quot;headerlink&quot; title=&quot;The Savepoint Pattern&quot;&gt;&lt;/a&gt;The Savepoint Pattern&lt;/h3&gt;&lt;h3 id=&quot;Black-Belt-Merging&quot;&gt;&lt;a href=&quot;#Black-Belt-Merging&quot; class=&quot;headerlink&quot; title=&quot;Black Belt Merging&quot;&gt;&lt;/a&gt;Black Belt Merging&lt;/h3&gt;&lt;h2 id=&quot;Rebase（Rebase-From-the-Ground-Up）&quot;&gt;&lt;a href=&quot;#Rebase（Rebase-From-the-Ground-Up）&quot; class=&quot;headerlink&quot; title=&quot;Rebase（Rebase From the Ground Up）&quot;&gt;&lt;/a&gt;Rebase（Rebase From the Ground Up）&lt;/h2&gt;&lt;h3 id=&quot;Cherry-Picking-Explained&quot;&gt;&lt;a href=&quot;#Cherry-Picking-Explained&quot; class=&quot;headerlink&quot; title=&quot;Cherry-Picking Explained&quot;&gt;&lt;/a&gt;Cherry-Picking Explained&lt;/h3&gt;&lt;h3 id=&quot;Using-‘git-cherry-pick’-to-Simulate-‘git-rebase’&quot;&gt;&lt;a href=&quot;#Using-‘git-cherry-pick’-to-Simulate-‘git-rebase’&quot; class=&quot;headerlink&quot; title=&quot;Using ‘git cherry-pick’ to Simulate ‘git rebase’&quot;&gt;&lt;/a&gt;Using ‘git cherry-pick’ to Simulate ‘git rebase’&lt;/h3&gt;&lt;h3 id=&quot;A-Helpful-Mnemonic-for-‘git-rebase’-Arguments&quot;&gt;&lt;a href=&quot;#A-Helpful-Mnemonic-for-‘git-rebase’-Arguments&quot; class=&quot;headerlink&quot; title=&quot;A Helpful Mnemonic for ‘git rebase’ Arguments&quot;&gt;&lt;/a&gt;A Helpful Mnemonic for ‘git rebase’ Arguments&lt;/h3&gt;&lt;h2 id=&quot;The-End&quot;&gt;&lt;a href=&quot;#The-End&quot; class=&quot;headerlink&quot; title=&quot;The End&quot;&gt;&lt;/a&gt;The End&lt;/h2&gt;</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;本文翻译自 Sam Livingston-Gray 的文章&lt;a href=&quot;http://think-like-a-git.net/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Think Like (a) Git&lt;/a&gt;。我在学习 Git 的过程中无意
+    
+    </summary>
+    
+      <category term="Git" scheme="http://zqchen90.github.io/categories/Git/"/>
+    
+    
+      <category term="Git" scheme="http://zqchen90.github.io/tags/Git/"/>
+    
+      <category term="翻译" scheme="http://zqchen90.github.io/tags/%E7%BF%BB%E8%AF%91/"/>
+    
+  </entry>
   
   <entry>
     <title>React 实现添加千分位的 Input</title>
