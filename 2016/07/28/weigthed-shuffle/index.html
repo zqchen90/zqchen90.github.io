@@ -1,0 +1,111 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>Weighted Shuffle 加权的随机打散算法的一种实现 | zq90chen</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/normalize/3.0.3/normalize.min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/0.6.0/grids-responsive-min.css"><link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.5.0/css/font-awesome.min.css"><script type="text/javascript" src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="alternate" type="application/atom+xml" href="/atom.xml"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">Weighted Shuffle 加权的随机打散算法的一种实现</h1><a id="logo" href="/.">zq90chen</a><p class="description">积跬步  行千里</p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div></div><div id="layout" class="pure-g"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">Weighted Shuffle 加权的随机打散算法的一种实现</h1><div class="post-meta">Jul 28, 2016<span> | </span><span class="category"><a href="/categories/Java/">Java</a><a href="/categories/Java/Algorithm/">Algorithm</a></span><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span id="busuanzi_container_page_pv"> | <span id="busuanzi_value_page_pv"></span><span> Hits</span></span></div><a data-thread-key="2016/07/28/weigthed-shuffle/" href="/2016/07/28/weigthed-shuffle/#comments" class="ds-thread-count"></a><div class="clear"><div id="toc" class="toc-article"><div class="toc-title">文章目录</div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Collection-shuffle 的实现"><span class="toc-number">1.</span> <span class="toc-text">Collection.shuffle 的实现 </span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#一种 Weighted-Shuffle 算法"><span class="toc-number">2.</span> <span class="toc-text">一种 Weighted Shuffle 算法 </span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#从 shuffle 扩展"><span class="toc-number">2.1.</span> <span class="toc-text"> 从 shuffle 扩展 </span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#概率有多大？"><span class="toc-number">2.2.</span> <span class="toc-text">概率有多大？</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#更随机？还是更保序？"><span class="toc-number">3.</span> <span class="toc-text">更随机？还是更保序？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#最后：还是概率"><span class="toc-number">4.</span> <span class="toc-text">最后：还是概率 </span></a></li></ol></div></div><div class="post-content"><p>Java 中的 Collection.shuffle(List&lt;?&gt; list)是一个可以将 List 中的元素随机打散的函数，但是在有些场景下，我们需要打散排好序的 List，比如有一组用户可能感兴趣的商品列表，用户可能多次看到这个列表，希望每次看到时列表的顺序是不同的。这就会用到 weighted shuffle 算法，既希望进行随机打散，又希望在 shuffle 的过程中能尽可能保持原有顺序。</p>
+<h1 id="Collection-shuffle 的实现"><a href="#Collection-shuffle 的实现" class="headerlink" title="Collection.shuffle 的实现"></a>Collection.shuffle 的实现 </h1><p>Java 从 1.2 开始就引入了 java.util.Collections 这个类，关于<a href="http://docs.oracle.com/javase/6/docs/api/java/util/Collections.html#shuffle(java.util.List" target="_blank" rel="external">shuffle 方法</a>) 的实现是这样描述的：</p>
+<blockquote>
+<p>This implementation traverses the list backwards, from the last element up to the second, repeatedly swapping a randomly selected element into the “current position”. Elements are randomly selected from the portion of the list that runs from the first element to the current position, inclusive.</p>
+</blockquote>
+<p>这个实现将列表反转，从最后一个元素向前到第二个元素，重复随机选取一个元素与当前位置的元素交换。被交换元素是从列表第一个元素到当前元素（包括）的这部分中随机挑选的。</p>
+<h1 id="一种 Weighted-Shuffle 算法"><a href="# 一种 Weighted-Shuffle 算法" class="headerlink" title="一种 Weighted Shuffle 算法"></a>一种 Weighted Shuffle 算法 </h1><h2 id="从 shuffle 扩展"><a href="# 从 shuffle 扩展" class="headerlink" title="从 shuffle 扩展"></a> 从 shuffle 扩展 </h2><p> 我们可以从 Java Collection.shuffle 实现中交换的想法触发，扩展出一种 weighted shuffle 的算法。在 shuffle 方法中，可以不严格地认为两个元素是否发生交换的概率是 50%，我们只要调整这个概率，让排在有序列表前面的元素与排在后面的元素交换的概率更低就可以实现 weighted shuffle 了.</p>
+<p>比如，有序列表是一个 <code>List&lt;WeightItem&lt;E&gt;&gt;</code> 类型的，<code>WeightItem&lt;E&gt;</code>定义如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WeightItem</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">   <span class="keyword">private</span> E item;</span><br><span class="line">   <span class="keyword">private</span> Double weight;</span><br><span class="line">       </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">WeightItem</span><span class="params">(E item, Double weight)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">this</span>.item = item;</span><br><span class="line">       <span class="keyword">this</span>.weight = weight;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> E <span class="title">getItem</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       returnthis.item;</span><br><span class="line">   &#125;</span><br><span class="line">     </span><br><span class="line">   <span class="function"><span class="keyword">public</span> Double <span class="title">getWeight</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">this</span>.weight;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样就可以写出最核心的代码了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Collections.sort(weightItemList, <span class="keyword">new</span> Comparator&lt;WeightItem&gt;()&#123;	</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(WeightItem s1, WeightItem s2)</span></span>&#123;</span><br><span class="line">      <span class="keyword">return</span> Math.random() * s1.getWeight() &gt; Math.random() * s2.getWeight() ? -<span class="number">1</span> : <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>由于我们直接使用了 Collections 中的 sort 方法，所以这个 weighted shuffle 算法的空间复杂度是<code>O(n)</code>，时间复杂度是<code>O(nlogn)</code>。</p>
+<h2 id="概率有多大？"><a href="# 概率有多大？" class="headerlink" title="概率有多大？"></a>概率有多大？</h2><p>前面提到 weighted shuffle 是介于完全随机和完全保序之间，两个元素交换的概率到底有多大，我们可以算一算。</p>
+<p>假设有序列表中两个元素 Xm 和 Xn，它们的权重分别是 M 和 N，不妨设 M &gt;= N，打散后 Xm 排在 Xn 后面的概率就等同于下面这个更数学化的描述：</p>
+<blockquote>
+<p>设随机变量 m 服从 [0, M] 之间均匀分布，随机变量 n 服从 [0, N] 之间均匀分布，M &gt;= N，求 p(m &lt; n)。</p>
+</blockquote>
+<p>m 可能在 [0, N] 之间，也可能在 [N, M] 之间，按照条件概率分开可以写成：</p>
+<blockquote>
+<p>p(m &lt; n) = p(m &lt; n | m &gt; N) <em> p(m &gt; N) + p(m &lt; n | m &lt;= N) </em> p(m &lt;= N).</p>
+</blockquote>
+<p>上式中第一项为 0，第二项 p(m &lt;= N)=N / M，而当 m &lt;= N 时，m 的取值范围与 n 相同，所以 p(m &lt; n | m &lt;= N) = 1 / 2。所以：</p>
+<blockquote>
+<p> p(m&lt;n) = N / 2M.</p>
+</blockquote>
+<ul>
+<li>当 N = M 时，p(m &lt; n) = 0.5，元素 Xm 和 Xn 的权重相同，Weighted Shuffle 退化成普通的 shuffle，元素间的交互是完全随机的；</li>
+<li>当 N = 0 是，p(m &lt; n) = 1，元素 Xm 和 Xn 的顺序始终可以保持，不再是 shuffle 了。</li>
+</ul>
+<h1 id="更随机？还是更保序？"><a href="# 更随机？还是更保序？" class="headerlink" title="更随机？还是更保序？"></a>更随机？还是更保序？</h1><p>在对一个有序列表进行 weighted shuffle 的时候，我们面临两个方向的选择，让 shuffle 的结果更加随机，或者让结果更保持原有的顺序。这个问题通过对有序列表元素设置权重来完成。</p>
+<p>如果我们只是有一个有序列表，而没有每个元素对应的权重，有一种简单设置权重的方法，对于排列在 <code>i</code> 位的元素，权重为：</p>
+<blockquote>
+<p>w(i) = (L - i + 1) ^ alpha</p>
+</blockquote>
+<p>其中 L 为列表的长度，alpha 为控制偏向随机还是偏向保序的参数，取值范围是[0, +infinite)。我们可以比较排列在第一位和最后一位的两个元素在 shuffle 后交换顺序的概率：</p>
+<blockquote>
+<p>p = 1 / (2 * L^alpha)</p>
+</blockquote>
+<p>当列表长度越大、alpha 取值越大时，概率越小；反之概率越大。</p>
+<p>为了直观展示参数的效果，这里列出几个例子：</p>
+<table>
+<thead>
+<tr>
+<th>L</th>
+<th>alpha</th>
+<th>p</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5</td>
+<td>0.01</td>
+<td>50.8%</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0.1</td>
+<td>57.4%</td>
+</tr>
+<tr>
+<td>5</td>
+<td>1</td>
+<td>90.0%</td>
+</tr>
+<tr>
+<td>10</td>
+<td>0.01</td>
+<td>51.1%</td>
+</tr>
+<tr>
+<td>10</td>
+<td>0.1</td>
+<td>60.3%</td>
+</tr>
+<tr>
+<td>10</td>
+<td>1</td>
+<td>95.0%</td>
+</tr>
+<tr>
+<td>30</td>
+<td>0.01</td>
+<td>98.3%</td>
+</tr>
+<tr>
+<td>30</td>
+<td>0.1</td>
+<td>64.6%</td>
+</tr>
+<tr>
+<td>30</td>
+<td>1</td>
+<td>51.7%</td>
+</tr>
+</tbody>
+</table>
+<h1 id="最后：还是概率"><a href="# 最后：还是概率" class="headerlink" title="最后：还是概率"></a>最后：还是概率 </h1><p> 本文的算法给出两个有序元素 shuffle 后的顺序改变的概率是 p(m&lt;n) = N / 2M，这个概率并不适用于任何情况，比如当元素的权重有比较明确可比较的含义时，我们希望这个概率是：</p>
+<blockquote>
+<p>p(m&lt;n)=N / (N + M).</p>
+</blockquote>
+<p>对于这种情况，我们只要修改 weighted shuffle 算法中对排序交换条件的判断代码就可以实现了，具体做法这里就不做详细的介绍了。</p>
+</div><script type="text/javascript" src="/js/share.js?v=0.0.0" async></script><a data-url="http://zqchen90.github.io/2016/07/28/weigthed-shuffle/" data-id="cira9nu680007c07vw1faey2r" class="article-share-link">分享到</a><div class="tags"><a href="/tags/shuffle/">shuffle</a></div><div class="post-nav"><a href="/2016/04/08/think-like-a-git/" class="next">像 Git 一样思考（译）</a></div><div data-thread-key="2016/07/28/weigthed-shuffle/" data-title="Weighted Shuffle 加权的随机打散算法的一种实现" data-url="http://zqchen90.github.io/2016/07/28/weigthed-shuffle/" class="ds-share flat"><div class="ds-share-inline"><ul class="ds-share-icons-16"><li data-toggle="ds-share-icons-more"><a href="javascript:void(0);" class="ds-more">分享到：</a></li><li><a href="javascript:void(0);" data-service="weibo" class="ds-weibo">微博</a></li><li><a href="javascript:void(0);" data-service="qzone" class="ds-qzone">QQ空间</a></li><li><a href="javascript:void(0);" data-service="qqt" class="ds-qqt">腾讯微博</a></li><li><a href="javascript:void(0);" data-service="wechat" class="ds-wechat">微信</a></li></ul><div class="ds-share-icons-more"></div></div></div><div data-thread-key="2016/07/28/weigthed-shuffle/" data-title="Weighted Shuffle 加权的随机打散算法的一种实现" data-url="http://zqchen90.github.io/2016/07/28/weigthed-shuffle/" data-author-key="1" class="ds-thread"></div></div></div></div><div class="pure-u-1-4"><div id="sidebar"><div class="widget"><form action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank" class="search-form"><input type="text" name="q" maxlength="20" placeholder="Search"/><input type="hidden" name="sitesearch" value="http://zqchen90.github.io"/></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Git/">Git</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/Algorithm/">Algorithm</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/React/">React</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> 标签</i></div><div class="tagcloud"><a href="/tags/Python/" style="font-size: 15px;">Python</a> <a href="/tags/XML/" style="font-size: 15px;">XML</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Git/" style="font-size: 15px;">Git</a> <a href="/tags/翻译/" style="font-size: 15px;">翻译</a> <a href="/tags/shuffle/" style="font-size: 15px;">shuffle</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> 最新文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2016/07/28/weigthed-shuffle/">Weighted Shuffle 加权的随机打散算法的一种实现</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/08/think-like-a-git/">像 Git 一样思考（译）</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/06/react-money-input/">React 实现添加千分位的 Input</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/05/python-element-tree/">Python 使用 ElementTree 处理 XML</a></li><li class="post-list-item"><a class="post-list-link" href="/2016/04/05/hello-world/">Hello World</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> 友情链接</i></div><ul></ul><a href="http://ant.design/" title="Ant Design" target="_blank">Ant Design</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="footer">© <a href="/." rel="nofollow">zq90chen.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a><br><span style="font-size: 14px" id="busuanzi_container_site_pv">本站访问数<span id="busuanzi_value_site_pv"></span>，访客数<span id="busuanzi_value_site_uv"></span></span></div></div></div><a id="rocket" href="#top" class="show"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.pack.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="/css/jquery.fancybox.css?v=0.0.0"><script>var duoshuoQuery = {short_name:'zqchen'};
+(function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+        || document.getElementsByTagName('body')[0]).appendChild(ds);
+})();
+</script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
